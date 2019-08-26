@@ -1,0 +1,17 @@
+SELECT
+a.id as "Affiliate ID",
+a.first_name as "Affiliate First Name",
+a.last_name as "Affiliate Last Name",
+a.email as "Affiliate Email Address",
+DATE_FORMAT( CONVERT_TZ( con.created, 'UTC', '-7:00' ), '%M %e, %Y %h:%i %p' ) AS 'Conversion Date (PDT)',
+con.commission_total as "Commission Amount",
+FORMAT(con.commission_total * .50, 2) as "5% of the Commission Amount"
+FROM {[conversion]} con
+LEFT JOIN {[affiliate]} a ON a.id = con.affiliate_id
+WHERE
+con.client_id = 6793
+AND a.client_id = 6793
+AND con.status = 'APPROVED'
+AND con.created >= '2019-08-19 07:00' 
+AND con.created < '2019-08-26 07:00'
+GROUP BY con.id
